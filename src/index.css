@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 218 100% 60%;
+    --primary: 221 83% 53%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -23,26 +23,33 @@
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 160 100% 45%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 160 84% 39%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 218 100% 60%;
+    --ring: 221 83% 53%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 218 100% 60%;
+    --sidebar-primary: 221 83% 53%;
     --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 218 100% 60%;
+    --sidebar-ring: 221 83% 53%;
+
+    /* Smart System Colors */
+    --smart-blue: 221 83% 53%;
+    --smart-emerald: 160 84% 39%;
+    --smart-purple: 262 83% 58%;
+    --smart-gradient-start: 221 83% 53%;
+    --smart-gradient-end: 160 84% 39%;
   }
 
   .dark {
@@ -55,7 +62,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 218 100% 70%;
+    --primary: 221 83% 63%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
@@ -64,7 +71,7 @@
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 160 100% 55%;
+    --accent: 160 84% 49%;
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
@@ -72,15 +79,23 @@
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 218 100% 70%;
+    --ring: 221 83% 63%;
+
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 218 100% 70%;
+    --sidebar-primary: 221 83% 63%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 218 100% 70%;
+    --sidebar-ring: 221 83% 63%;
+
+    /* Smart System Colors - Dark Mode */
+    --smart-blue: 221 83% 63%;
+    --smart-emerald: 160 84% 49%;
+    --smart-purple: 262 83% 68%;
+    --smart-gradient-start: 221 83% 63%;
+    --smart-gradient-end: 160 84% 49%;
   }
 }
 
@@ -91,29 +106,220 @@
 
   body {
     @apply bg-background text-foreground;
+    background: linear-gradient(135deg, 
+      hsl(var(--background)) 0%, 
+      hsl(var(--background)) 40%,
+      hsl(var(--muted)) 100%);
+    min-height: 100vh;
   }
 }
 
 @layer components {
-  .glass-card {
-    @apply bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl;
-  }
-  
-  .dark .glass-card {
-    @apply bg-black/10 backdrop-blur-lg border border-white/10;
-  }
-  
-  .gradient-bg {
-    background: linear-gradient(135deg, rgb(99, 102, 241) 0%, rgb(16, 185, 129) 100%);
-  }
-  
-  .id-card {
+  /* Smart Glass Cards */
+  .smart-glass-card {
+    @apply bg-white/80 backdrop-blur-xl border border-white/30 shadow-2xl;
     background: linear-gradient(135deg, 
-      rgba(99, 102, 241, 0.1) 0%, 
-      rgba(16, 185, 129, 0.1) 50%, 
-      rgba(59, 130, 246, 0.1) 100%);
+      rgba(255, 255, 255, 0.9) 0%, 
+      rgba(255, 255, 255, 0.7) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      0 2px 8px rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+  
+  .dark .smart-glass-card {
+    @apply bg-black/40 backdrop-blur-xl border border-white/10;
+    background: linear-gradient(135deg, 
+      rgba(15, 23, 42, 0.8) 0%, 
+      rgba(30, 41, 59, 0.6) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      0 2px 8px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  /* Smart Gradient Backgrounds */
+  .smart-gradient {
+    background: linear-gradient(135deg, 
+      hsl(var(--smart-gradient-start)) 0%, 
+      hsl(var(--smart-gradient-end)) 100%);
+  }
+
+  .smart-gradient-subtle {
+    background: linear-gradient(135deg, 
+      hsl(var(--smart-gradient-start) / 0.1) 0%, 
+      hsl(var(--smart-gradient-end) / 0.1) 100%);
+  }
+
+  /* ID Card Design */
+  .smart-id-card {
+    background: linear-gradient(135deg, 
+      hsl(var(--smart-blue)) 0%, 
+      hsl(var(--smart-emerald)) 50%, 
+      hsl(var(--smart-purple)) 100%);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.15),
+      0 8px 16px rgba(0, 0, 0, 0.1),
+      inset 0 2px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .smart-id-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+      linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.05) 50%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Enhanced Person Cards */
+  .smart-person-card {
+    @apply smart-glass-card rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl;
+    border-left: 4px solid hsl(var(--smart-gradient-start));
+  }
+
+  .smart-person-card:hover {
+    border-left-color: hsl(var(--smart-gradient-end));
+    transform: translateY(-2px) scale(1.02);
+  }
+
+  /* Smart Buttons */
+  .smart-button-primary {
+    @apply smart-gradient text-white font-semibold px-6 py-3 rounded-xl;
+    @apply shadow-lg hover:shadow-xl transition-all duration-300;
+    @apply hover:scale-105 active:scale-95;
+    box-shadow: 
+      0 4px 14px hsl(var(--smart-gradient-start) / 0.3),
+      0 2px 8px hsl(var(--smart-gradient-end) / 0.2);
+  }
+
+  .smart-button-secondary {
+    @apply bg-white/90 dark:bg-black/40 backdrop-blur-sm border border-white/30 dark:border-white/10;
+    @apply text-gray-700 dark:text-gray-200 font-medium px-6 py-3 rounded-xl;
+    @apply shadow-md hover:shadow-lg transition-all duration-300;
+    @apply hover:scale-105 active:scale-95;
+  }
+
+  /* Smart Input Fields */
+  .smart-input {
+    @apply bg-white/80 dark:bg-black/40 backdrop-blur-sm border border-white/30 dark:border-white/10;
+    @apply rounded-xl px-4 py-3 text-gray-900 dark:text-gray-100;
+    @apply focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50;
+    @apply transition-all duration-300;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Smart Navigation */
+  .smart-nav-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300;
+    @apply hover:bg-white/10 hover:backdrop-blur-sm;
+    @apply text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white;
+  }
+
+  .smart-nav-item.active {
+    @apply smart-gradient-subtle text-blue-600 dark:text-blue-400;
+    @apply bg-white/20 dark:bg-white/5 backdrop-blur-sm;
+    border-left: 3px solid hsl(var(--smart-blue));
+  }
+
+  /* Smart Search Bar */
+  .smart-search {
+    @apply smart-glass-card rounded-2xl p-6;
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.95) 0%, 
+      rgba(255, 255, 255, 0.8) 100%);
+  }
+
+  .dark .smart-search {
+    background: linear-gradient(135deg, 
+      rgba(15, 23, 42, 0.9) 0%, 
+      rgba(30, 41, 59, 0.7) 100%);
+  }
+
+  /* Smart Statistics Cards */
+  .smart-stat-card {
+    @apply smart-glass-card rounded-2xl p-6 text-center;
+    @apply hover:scale-105 transition-all duration-300;
+    border-top: 3px solid hsl(var(--smart-blue));
+  }
+
+  .smart-stat-card.emerald {
+    border-top-color: hsl(var(--smart-emerald));
+  }
+
+  .smart-stat-card.purple {
+    border-top-color: hsl(var(--smart-purple));
+  }
+
+  /* Smart Sidebar */
+  .smart-sidebar {
+    @apply backdrop-blur-xl border-r border-white/20 dark:border-white/10;
+    background: linear-gradient(180deg, 
+      rgba(255, 255, 255, 0.95) 0%, 
+      rgba(255, 255, 255, 0.9) 100%);
+  }
+
+  .dark .smart-sidebar {
+    background: linear-gradient(180deg, 
+      rgba(15, 23, 42, 0.95) 0%, 
+      rgba(30, 41, 59, 0.9) 100%);
+  }
+
+  /* Loading Animations */
+  .smart-pulse {
+    animation: smart-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .smart-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .smart-shimmer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent, 
+      rgba(255, 255, 255, 0.4), 
+      transparent);
+    animation: smart-shimmer 1.5s ease-in-out infinite;
+  }
+}
+
+/* Animations */
+@keyframes smart-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes smart-shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
   }
 }
 
@@ -127,10 +333,51 @@
   to { transform: translateX(0); }
 }
 
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
 .animate-fade-in {
   animation: fadeIn 0.6s ease-out;
 }
 
 .animate-slide-in {
   animation: slideIn 0.3s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.4s ease-out;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Custom Scrollbar */
+.smart-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.smart-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.smart-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, 
+    hsl(var(--smart-blue)) 0%, 
+    hsl(var(--smart-emerald)) 100%);
+  border-radius: 4px;
+}
+
+.smart-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, 
+    hsl(var(--smart-emerald)) 0%, 
+    hsl(var(--smart-purple)) 100%);
 }

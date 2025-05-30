@@ -1,7 +1,7 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Download, Printer } from 'lucide-react';
+import { Download, Printer, Shield, Verified } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface Person {
@@ -18,100 +18,162 @@ interface IDCardPreviewProps {
 
 export function IDCardPreview({ person }: IDCardPreviewProps) {
   const generateQRCode = (text: string) => {
-    // Mock QR code - in real app, use a QR code library
     return `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(text)}`;
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold">ID Card Preview</h3>
-        <div className="flex gap-2">
-          <Button variant="outline">
+        <div>
+          <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">Smart ID Card Preview</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Next-generation identity verification</p>
+        </div>
+        <div className="flex gap-3">
+          <Button variant="outline" className="smart-button-secondary">
             <Download className="mr-2 h-4 w-4" />
-            Download
+            Download HD
           </Button>
-          <Button>
+          <Button className="smart-button-primary">
             <Printer className="mr-2 h-4 w-4" />
-            Print
+            Print Card
           </Button>
         </div>
       </div>
 
-      {/* ID Card */}
+      {/* Smart ID Card */}
       <div className="flex justify-center">
-        <div className="w-96 h-64 id-card rounded-2xl p-6 text-white relative overflow-hidden">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary via-accent to-primary"></div>
-            <div className="absolute top-4 right-4 w-20 h-20 border-2 border-white/20 rounded-full"></div>
-            <div className="absolute bottom-4 left-4 w-16 h-16 border-2 border-white/20 rounded-full"></div>
+        <div className="w-[420px] h-[280px] smart-id-card rounded-3xl p-8 text-white relative overflow-hidden transform hover:scale-105 transition-all duration-500 animate-scale-in">
+          {/* Holographic Pattern */}
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-6 right-6 w-24 h-24 border-2 border-white/30 rounded-full animate-pulse"></div>
+            <div className="absolute bottom-6 left-6 w-20 h-20 border-2 border-white/20 rounded-full animate-float"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-1 bg-white/10 rotate-45"></div>
+          </div>
+
+          {/* Security Features */}
+          <div className="absolute top-4 left-4 flex items-center gap-2">
+            <Shield className="h-5 w-5 text-yellow-300" />
+            <span className="text-xs font-medium opacity-90">SECURE</span>
+          </div>
+
+          <div className="absolute top-4 right-4 flex items-center gap-2">
+            <Verified className="h-5 w-5 text-emerald-300" />
+            <span className="text-xs font-medium opacity-90">VERIFIED</span>
           </div>
 
           {/* Content */}
           <div className="relative z-10 h-full flex flex-col">
             {/* Header */}
-            <div className="text-center mb-4">
-              <h4 className="text-lg font-bold">IDENTITY CARD</h4>
-              <p className="text-xs opacity-80">Myanmar Identity Management System</p>
+            <div className="text-center mb-6">
+              <h4 className="text-xl font-bold tracking-wide">SMART IDENTITY CARD</h4>
+              <p className="text-xs opacity-80 tracking-widest">MYANMAR DIGITAL ID SYSTEM</p>
             </div>
 
             {/* Main Content */}
-            <div className="flex-1 flex items-center gap-4">
-              <Avatar className="h-20 w-20 border-2 border-white/50">
+            <div className="flex-1 flex items-center gap-6">
+              <Avatar className="h-24 w-24 border-3 border-white/60 shadow-xl">
                 <AvatarImage src={person.photo} alt={person.name} />
-                <AvatarFallback className="text-gray-800">{person.name.charAt(0)}</AvatarFallback>
+                <AvatarFallback className="text-gray-800 text-lg font-bold">
+                  {person.name.charAt(0)}
+                </AvatarFallback>
               </Avatar>
 
-              <div className="flex-1 space-y-1">
-                <h5 className="font-bold text-lg">{person.name}</h5>
-                <p className="text-sm opacity-90">ID: {person.personalId}</p>
-                <p className="text-sm opacity-90">NRC: {person.nrc}</p>
-                <p className="text-xs opacity-80">DOB: {person.dateOfBirth}</p>
+              <div className="flex-1 space-y-2">
+                <h5 className="font-bold text-xl tracking-wide">{person.name}</h5>
+                <div className="space-y-1">
+                  <p className="text-sm opacity-95 font-medium">ID: {person.personalId}</p>
+                  <p className="text-sm opacity-95 font-medium">NRC: {person.nrc}</p>
+                  <p className="text-xs opacity-80">DOB: {person.dateOfBirth}</p>
+                </div>
+                <div className="mt-3 px-3 py-1 bg-white/20 rounded-full inline-block">
+                  <span className="text-xs font-semibold">CITIZEN</span>
+                </div>
               </div>
 
-              <div className="flex flex-col items-center gap-2">
-                <img
-                  src={generateQRCode(`${person.personalId}-${person.nrc}`)}
-                  alt="QR Code"
-                  className="w-16 h-16 bg-white rounded-lg p-1"
-                />
-                <p className="text-xs opacity-80">Scan QR</p>
+              <div className="flex flex-col items-center gap-3">
+                <div className="p-2 bg-white rounded-xl shadow-lg">
+                  <img
+                    src={generateQRCode(`${person.personalId}-${person.nrc}`)}
+                    alt="QR Code"
+                    className="w-16 h-16"
+                  />
+                </div>
+                <p className="text-xs opacity-80 font-medium">SCAN TO VERIFY</p>
               </div>
             </div>
 
             {/* Footer */}
-            <div className="text-center">
-              <p className="text-xs opacity-60">Valid until: December 2029</p>
+            <div className="text-center pt-4 border-t border-white/20">
+              <p className="text-xs opacity-70">Valid until: December 2029 • Serial: SC-{person.personalId}</p>
             </div>
+          </div>
+
+          {/* Microtext Security Feature */}
+          <div className="absolute bottom-1 left-4 text-[6px] opacity-40 tracking-wider">
+            SECURE•AUTHENTIC•VERIFIED•DIGITAL•IDENTITY•MANAGEMENT•SYSTEM
           </div>
         </div>
       </div>
 
-      {/* Card Info */}
-      <Card>
-        <CardContent className="p-6">
-          <h4 className="font-semibold mb-4">Card Details</h4>
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <p className="text-muted-foreground">Card Type</p>
-              <p className="font-medium">Standard Identity Card</p>
+      {/* Enhanced Card Details */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="smart-glass-card">
+          <CardContent className="p-6">
+            <h4 className="font-bold mb-4 text-gray-900 dark:text-gray-100 flex items-center gap-2">
+              <Shield className="h-5 w-5 text-blue-600" />
+              Security Features
+            </h4>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-600 dark:text-gray-400">Holographic Security</span>
+                <span className="font-medium text-emerald-600">✓ Active</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600 dark:text-gray-400">QR Code Verification</span>
+                <span className="font-medium text-emerald-600">✓ Enabled</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600 dark:text-gray-400">Digital Signature</span>
+                <span className="font-medium text-emerald-600">✓ Valid</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600 dark:text-gray-400">Anti-Counterfeiting</span>
+                <span className="font-medium text-emerald-600">✓ Protected</span>
+              </div>
             </div>
-            <div>
-              <p className="text-muted-foreground">Issue Date</p>
-              <p className="font-medium">January 15, 2024</p>
+          </CardContent>
+        </Card>
+
+        <Card className="smart-glass-card">
+          <CardContent className="p-6">
+            <h4 className="font-bold mb-4 text-gray-900 dark:text-gray-100 flex items-center gap-2">
+              <Verified className="h-5 w-5 text-purple-600" />
+              Card Information
+            </h4>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-600 dark:text-gray-400">Card Type</span>
+                <span className="font-medium">Smart Identity Card</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600 dark:text-gray-400">Issue Date</span>
+                <span className="font-medium">January 15, 2024</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600 dark:text-gray-400">Expiry Date</span>
+                <span className="font-medium">December 31, 2029</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600 dark:text-gray-400">Status</span>
+                <span className="font-medium text-emerald-600 flex items-center gap-1">
+                  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                  Active
+                </span>
+              </div>
             </div>
-            <div>
-              <p className="text-muted-foreground">Expiry Date</p>
-              <p className="font-medium">December 31, 2029</p>
-            </div>
-            <div>
-              <p className="text-muted-foreground">Card Status</p>
-              <p className="font-medium text-green-600">Active</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
