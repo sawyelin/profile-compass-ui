@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Users, Search, Plus, Family as FamilyIcon, Tree, History, FileText } from 'lucide-react';
+import { Users, Search, Plus, Users as FamilyIcon, Trees, History, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Family = () => {
@@ -92,7 +91,7 @@ const Family = () => {
           <Card className="smart-glass-card">
             <CardContent className="p-6">
               <div className="flex items-center space-x-2">
-                <Tree className="h-5 w-5 text-green-600" />
+                <Trees className="h-5 w-5 text-green-600" />
                 <div>
                   <p className="text-2xl font-bold text-green-600">4,891</p>
                   <p className="text-sm text-muted-foreground">Total Members</p>
@@ -187,7 +186,7 @@ const Family = () => {
                 <div className="flex gap-2 mt-4">
                   <Button variant="outline" size="sm" className="flex-1" asChild>
                     <Link to={`/person/${family.id}`}>
-                      <Tree className="mr-1 h-3 w-3" />
+                      <Trees className="mr-1 h-3 w-3" />
                       View Tree
                     </Link>
                   </Button>
@@ -205,7 +204,7 @@ const Family = () => {
         <div className="grid gap-6 md:grid-cols-3">
           <Card className="smart-glass-card border-2 border-dashed border-primary/30">
             <CardContent className="text-center py-8">
-              <Tree className="mx-auto h-12 w-12 text-primary mb-4" />
+              <Trees className="mx-auto h-12 w-12 text-primary mb-4" />
               <h3 className="font-semibold mb-2">Build Family Tree</h3>
               <p className="text-sm text-muted-foreground mb-4">
                 Create comprehensive family trees with multiple generations
