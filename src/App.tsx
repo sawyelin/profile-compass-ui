@@ -14,6 +14,7 @@ import PersonProfile from "./pages/PersonProfile";
 import Documents from "./pages/Documents";
 import Search from "./pages/Search";
 import IDCards from "./pages/IDCards";
+import Family from "./pages/Family";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
@@ -57,6 +58,11 @@ const App = () => (
               <Route path="/id-cards" element={
                 <ProtectedRoute>
                   <IDCards />
+                </ProtectedRoute>
+              } />
+              <Route path="/family" element={
+                <ProtectedRoute>
+                  <Family />
                 </ProtectedRoute>
               } />
               <Route path="/settings" element={
