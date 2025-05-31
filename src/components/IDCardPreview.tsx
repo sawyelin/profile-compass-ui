@@ -1,8 +1,10 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Download, Printer, Shield, Verified, CheckCircle, Star } from 'lucide-react';
+import { Download, Printer, Shield, Verified, CheckCircle, Star, FileText, Image } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { generateCardPDF, printCard, downloadCardImage } from '@/utils/cardUtils';
+import { useToast } from '@/hooks/use-toast';
 
 interface Person {
   name: string;
@@ -17,8 +19,58 @@ interface IDCardPreviewProps {
 }
 
 export function IDCardPreview({ person }: IDCardPreviewProps) {
+  const { toast } = useToast();
+
   const generateQRCode = (text: string) => {
     return `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(text)}`;
+  };
+
+  const handleDownloadPDF = async () => {
+    const success = await generateCardPDF('id-card-preview', `${person.name}-ID-Card`);
+    if (success) {
+      toast({
+        title: "Success",
+        description: "ID card PDF downloaded successfully!",
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to generate PDF. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handlePrint = () => {
+    const success = printCard('id-card-preview');
+    if (success) {
+      toast({
+        title: "Print Job Sent",
+        description: "ID card sent to printer successfully!",
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to print. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDownloadImage = async () => {
+    const success = await downloadCardImage('id-card-preview', `${person.name}-ID-Card`);
+    if (success) {
+      toast({
+        title: "Success",
+        description: "ID card image downloaded successfully!",
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to download image. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -28,12 +80,16 @@ export function IDCardPreview({ person }: IDCardPreviewProps) {
           <h3 className="text-xl font-bold">Professional ID Card</h3>
           <p className="text-sm text-muted-foreground">Digital identity verification system</p>
         </div>
-        <div className="flex gap-3">
-          <Button variant="outline" size="sm">
-            <Download className="mr-2 h-4 w-4" />
-            Download
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={handleDownloadImage}>
+            <Image className="mr-2 h-4 w-4" />
+            Image
           </Button>
-          <Button size="sm">
+          <Button variant="outline" size="sm" onClick={handleDownloadPDF}>
+            <FileText className="mr-2 h-4 w-4" />
+            PDF
+          </Button>
+          <Button size="sm" onClick={handlePrint}>
             <Printer className="mr-2 h-4 w-4" />
             Print
           </Button>
@@ -42,7 +98,10 @@ export function IDCardPreview({ person }: IDCardPreviewProps) {
 
       {/* Enhanced Professional ID Card */}
       <div className="flex justify-center">
-        <div className="w-[400px] h-[250px] bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 rounded-2xl p-6 text-white relative overflow-hidden shadow-2xl border border-slate-700/50">
+        <div 
+          id="id-card-preview"
+          className="w-[400px] h-[250px] bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 rounded-2xl p-6 text-white relative overflow-hidden shadow-2xl border border-slate-700/50"
+        >
           
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-10">

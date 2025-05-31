@@ -7,12 +7,17 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Calendar, Download, Printer, Search, Plus, Eye } from 'lucide-react';
+import { Calendar, Download, Printer, Search, Plus, Eye, FileText, CheckSquare } from 'lucide-react';
 import { IDCardPreview } from '@/components/IDCardPreview';
+import { generateCardPDF, printCard } from '@/utils/cardUtils';
+import { useToast } from '@/hooks/use-toast';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const IDCards = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPerson, setSelectedPerson] = useState<any>(null);
+  const [selectedCards, setSelectedCards] = useState<string[]>([]);
+  const { toast } = useToast();
 
   const people = [
     {
@@ -57,6 +62,153 @@ const IDCards = () => {
     setSelectedPerson(person);
   };
 
+  const handleCardSelection = (personId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedCards([...selectedCards, personId]);
+    } else {
+      setSelectedCards(selectedCards.filter(id => id !== personId));
+    }
+  };
+
+  const handleSelectAll = () => {
+    if (selectedCards.length === filteredPeople.length) {
+      setSelectedCards([]);
+    } else {
+      setSelectedCards(filteredPeople.map(person => person.id));
+    }
+  };
+
+  const handleBulkDownloadPDF = async () => {
+    if (selectedCards.length === 0) {
+      toast({
+        title: "No Cards Selected",
+        description: "Please select cards to download.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    let successCount = 0;
+    for (const personId of selectedCards) {
+      const person = people.find(p => p.id === personId);
+      if (person) {
+        // Create a temporary preview for each person
+        setSelectedPerson(person);
+        await new Promise(resolve => setTimeout(resolve, 100)); // Wait for render
+        
+        const success = await generateCardPDF('id-card-preview', `${person.name}-ID-Card`);
+        if (success) successCount++;
+      }
+    }
+
+    toast({
+      title: "Bulk Download Complete",
+      description: `Successfully downloaded ${successCount} of ${selectedCards.length} cards.`,
+    });
+  };
+
+  const handleBulkPrint = () => {
+    if (selectedCards.length === 0) {
+      toast({
+        title: "No Cards Selected",
+        description: "Please select cards to print.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // For bulk printing, we'll open a single print window with all cards
+    const selectedPeople = people.filter(person => selectedCards.includes(person.id));
+    
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      toast({
+        title: "Error",
+        description: "Could not open print window.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    let cardsHtml = '';
+    selectedPeople.forEach(person => {
+      cardsHtml += `
+        <div style="page-break-after: always; margin-bottom: 20px;">
+          <div style="width: 400px; height: 250px; background: linear-gradient(to bottom right, #0f172a, #1e3a8a, #0f172a); border-radius: 16px; padding: 24px; color: white; position: relative; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1px solid rgba(71, 85, 105, 0.5);">
+            <div style="text-align: center; margin-bottom: 16px; padding-top: 24px;">
+              <h4 style="font-size: 18px; font-weight: bold; letter-spacing: 0.1em;">MYANMAR DIGITAL ID</h4>
+              <div style="width: 64px; height: 2px; background: linear-gradient(to right, #60a5fa, #34d399); margin: 4px auto;"></div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 16px; margin-top: 8px;">
+              <div style="width: 80px; height: 80px; border: 2px solid rgba(255, 255, 255, 0.6); border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; color: #0f172a; font-weight: bold; font-size: 24px;">
+                ${person.name.charAt(0)}
+              </div>
+              <div style="flex: 1;">
+                <h5 style="font-weight: bold; font-size: 18px; letter-spacing: 0.05em;">${person.name}</h5>
+                <div style="font-size: 14px; margin-top: 4px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
+                    <span style="color: #bfdbfe; font-weight: 500;">ID:</span>
+                    <span style="font-family: monospace;">${person.personalId}</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
+                    <span style="color: #bfdbfe; font-weight: 500;">NRC:</span>
+                    <span style="font-family: monospace; font-size: 12px;">${person.nrc}</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="color: #bfdbfe; font-weight: 500;">DOB:</span>
+                    <span style="font-size: 12px;">${person.dateOfBirth}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="position: absolute; bottom: 12px; left: 24px; right: 24px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: rgba(191, 219, 254, 0.8);">
+                <span>Serial: SC-${person.personalId}</span>
+                <span>Exp: 12/2029</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Bulk ID Cards Print</title>
+          <style>
+            body {
+              margin: 0;
+              padding: 20px;
+              font-family: system-ui, -apple-system, sans-serif;
+              background: white;
+            }
+            @media print {
+              body { margin: 0; padding: 0; }
+            }
+          </style>
+        </head>
+        <body>
+          ${cardsHtml}
+        </body>
+      </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.focus();
+    
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 500);
+
+    toast({
+      title: "Print Job Sent",
+      description: `${selectedCards.length} cards sent to printer.`,
+    });
+  };
+
   return (
     <Layout>
       <div className="space-y-8 animate-fade-in">
@@ -74,9 +226,18 @@ const IDCards = () => {
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Select Person</CardTitle>
+                <CardTitle className="flex items-center justify-between">
+                  Select Person
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      checked={selectedCards.length === filteredPeople.length && filteredPeople.length > 0}
+                      onCheckedChange={handleSelectAll}
+                    />
+                    <span className="text-sm text-muted-foreground">Select All</span>
+                  </div>
+                </CardTitle>
                 <CardDescription>
-                  Choose a person to generate or view their ID card
+                  Choose people to generate or view their ID cards
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -100,6 +261,11 @@ const IDCards = () => {
                       onClick={() => setSelectedPerson(person)}
                     >
                       <div className="flex items-center gap-3">
+                        <Checkbox
+                          checked={selectedCards.includes(person.id)}
+                          onCheckedChange={(checked) => handleCardSelection(person.id, checked as boolean)}
+                          onClick={(e) => e.stopPropagation()}
+                        />
                         <Avatar className="h-12 w-12">
                           <AvatarImage src={person.photo} alt={person.name} />
                           <AvatarFallback>{person.name.charAt(0)}</AvatarFallback>
@@ -139,20 +305,30 @@ const IDCards = () => {
               </CardContent>
             </Card>
 
-            {/* Bulk Actions */}
+            {/* Enhanced Bulk Actions */}
             <Card>
               <CardHeader>
                 <CardTitle>Bulk Actions</CardTitle>
                 <CardDescription>
-                  Perform actions on multiple cards at once
+                  Perform actions on selected cards ({selectedCards.length} selected)
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <Button variant="outline" className="w-full">
-                  <Download className="mr-2 h-4 w-4" />
-                  Download All Cards
+              <CardContent className="space-y-3">
+                <Button 
+                  variant="outline" 
+                  className="w-full" 
+                  onClick={handleBulkDownloadPDF}
+                  disabled={selectedCards.length === 0}
+                >
+                  <FileText className="mr-2 h-4 w-4" />
+                  Download Selected as PDF
                 </Button>
-                <Button variant="outline" className="w-full">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={handleBulkPrint}
+                  disabled={selectedCards.length === 0}
+                >
                   <Printer className="mr-2 h-4 w-4" />
                   Print Selected Cards
                 </Button>
