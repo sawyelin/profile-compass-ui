@@ -56,10 +56,10 @@ export function AppSidebar() {
   const location = useLocation();
 
   return (
-    <Sidebar className="border-r border-border/40 bg-card/50 backdrop-blur-xl">
-      <SidebarHeader className="p-6 border-b border-border/40">
+    <Sidebar className="border-r bg-background">
+      <SidebarHeader className="p-6 border-b">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 smart-gradient rounded-xl flex items-center justify-center shadow-lg">
+          <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center shadow-lg">
             <User className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -75,7 +75,7 @@ export function AppSidebar() {
       
       <SidebarContent className="p-4">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground/80 uppercase tracking-wider mb-2">
+          <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
             Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -87,10 +87,9 @@ export function AppSidebar() {
                     isActive={location.pathname === item.url}
                     className={`
                       transition-all duration-200 group rounded-xl h-11
-                      hover:bg-primary/10 hover:text-primary
-                      data-[active=true]:bg-primary/15 data-[active=true]:text-primary
-                      data-[active=true]:shadow-sm data-[active=true]:border-l-4 data-[active=true]:border-primary
-                      data-[active=true]:font-semibold
+                      hover:bg-accent/50 hover:text-accent-foreground
+                      data-[active=true]:bg-primary data-[active=true]:text-primary-foreground
+                      data-[active=true]:shadow-md data-[active=true]:font-semibold
                     `}
                   >
                     <Link to={item.url} className="flex items-center gap-3 w-full">
@@ -105,7 +104,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       
-      <SidebarFooter className="p-4 border-t border-border/40">
+      <SidebarFooter className="p-4 border-t">
         <div className="text-xs text-muted-foreground text-center font-medium">
           © 2024 Identity System
         </div>

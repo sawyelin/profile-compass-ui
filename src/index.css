@@ -35,7 +35,7 @@
 
     --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 221.2 83.2% 53.3%;
     --sidebar-primary-foreground: 0 0% 98%;
@@ -43,19 +43,6 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 221.2 83.2% 53.3%;
-
-    /* Enhanced Smart System Colors */
-    --smart-blue: 221.2 83.2% 53.3%;
-    --smart-emerald: 142.1 76.2% 36.3%;
-    --smart-purple: 262.1 83.3% 57.8%;
-    --smart-amber: 32.3 94.6% 43.7%;
-    --smart-gradient-start: 221.2 83.2% 53.3%;
-    --smart-gradient-end: 142.1 76.2% 36.3%;
-    
-    /* Glass effect variables */
-    --glass-bg: rgba(255, 255, 255, 0.85);
-    --glass-border: rgba(255, 255, 255, 0.2);
-    --glass-shadow: rgba(0, 0, 0, 0.1);
   }
 
   .dark {
@@ -87,7 +74,7 @@
     --input: 240 3.7% 15.9%;
     --ring: 221.2 83.2% 63.3%;
 
-    --sidebar-background: 240 5.9% 10%;
+    --sidebar-background: 240 10% 3.9%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 221.2 83.2% 63.3%;
     --sidebar-primary-foreground: 0 0% 100%;
@@ -95,19 +82,6 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 221.2 83.2% 63.3%;
-
-    /* Enhanced Smart System Colors - Dark Mode */
-    --smart-blue: 221.2 83.2% 63.3%;
-    --smart-emerald: 142.1 70.6% 45.3%;
-    --smart-purple: 262.1 83.3% 67.8%;
-    --smart-amber: 32.3 94.6% 53.7%;
-    --smart-gradient-start: 221.2 83.2% 63.3%;
-    --smart-gradient-end: 142.1 70.6% 45.3%;
-    
-    /* Glass effect variables - Dark */
-    --glass-bg: rgba(15, 23, 42, 0.85);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-shadow: rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -133,193 +107,7 @@
   }
 }
 
-@layer components {
-  /* Enhanced Smart Glass Cards */
-  .smart-glass-card {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(20px);
-    box-shadow: 
-      0 8px 32px var(--glass-shadow),
-      0 2px 8px rgba(0, 0, 0, 0.05),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .smart-glass-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-      0 16px 64px var(--glass-shadow),
-      0 4px 16px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  }
-
-  /* Enhanced Smart Gradient Backgrounds */
-  .smart-gradient {
-    background: linear-gradient(135deg, 
-      hsl(var(--smart-gradient-start)) 0%, 
-      hsl(var(--smart-gradient-end)) 100%);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .smart-gradient::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, 
-      rgba(255, 255, 255, 0.2) 0%, 
-      transparent 50%);
-    pointer-events: none;
-  }
-
-  .smart-gradient-subtle {
-    background: linear-gradient(135deg, 
-      hsl(var(--smart-gradient-start) / 0.1) 0%, 
-      hsl(var(--smart-gradient-end) / 0.1) 100%);
-  }
-
-  /* Enhanced Smart Buttons */
-  .smart-button-primary {
-    @apply smart-gradient text-white font-semibold px-6 py-3 rounded-xl;
-    @apply shadow-lg hover:shadow-xl transition-all duration-300;
-    @apply hover:scale-105 active:scale-95;
-    box-shadow: 
-      0 4px 14px hsl(var(--smart-gradient-start) / 0.3),
-      0 2px 8px hsl(var(--smart-gradient-end) / 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-
-  .smart-button-secondary {
-    @apply bg-card/90 backdrop-blur-sm border border-border/40;
-    @apply text-card-foreground font-medium px-6 py-3 rounded-xl;
-    @apply shadow-md hover:shadow-lg transition-all duration-300;
-    @apply hover:scale-105 active:scale-95 hover:bg-muted/50;
-  }
-
-  /* Enhanced Smart Input Fields */
-  .smart-input {
-    @apply bg-card/80 backdrop-blur-sm border border-border/40;
-    @apply rounded-xl px-4 py-3 text-foreground;
-    @apply focus:ring-2 focus:ring-primary/50 focus:border-primary/50;
-    @apply transition-all duration-300 font-medium;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-
-  /* Enhanced Smart Navigation */
-  .smart-nav-item {
-    @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300;
-    @apply hover:bg-primary/10 hover:backdrop-blur-sm;
-    @apply text-muted-foreground hover:text-primary font-medium;
-  }
-
-  .smart-nav-item.active {
-    @apply smart-gradient-subtle text-primary;
-    @apply bg-primary/15 backdrop-blur-sm shadow-sm;
-    border-left: 4px solid hsl(var(--primary));
-    font-weight: 600;
-  }
-
-  /* Enhanced Smart Statistics Cards */
-  .smart-stat-card {
-    @apply smart-glass-card p-6 text-center;
-    @apply hover:scale-105 transition-all duration-300;
-    border-top: 3px solid hsl(var(--smart-blue));
-    position: relative;
-    overflow: hidden;
-  }
-
-  .smart-stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, 
-      hsl(var(--smart-blue)) 0%,
-      hsl(var(--smart-emerald)) 50%,
-      hsl(var(--smart-purple)) 100%);
-  }
-
-  .smart-stat-card.emerald::before {
-    background: linear-gradient(90deg, 
-      hsl(var(--smart-emerald)) 0%,
-      hsl(var(--smart-blue)) 100%);
-  }
-
-  .smart-stat-card.purple::before {
-    background: linear-gradient(90deg, 
-      hsl(var(--smart-purple)) 0%,
-      hsl(var(--smart-amber)) 100%);
-  }
-
-  /* Typography Enhancements */
-  .smart-heading {
-    @apply font-bold tracking-tight;
-    background: linear-gradient(135deg, 
-      hsl(var(--foreground)) 0%, 
-      hsl(var(--muted-foreground)) 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .smart-subheading {
-    @apply text-muted-foreground font-medium tracking-wide;
-    letter-spacing: 0.025em;
-  }
-
-  /* Loading Animations */
-  .smart-pulse {
-    animation: smart-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  .smart-shimmer {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .smart-shimmer::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, 
-      transparent, 
-      rgba(255, 255, 255, 0.4), 
-      transparent);
-    animation: smart-shimmer 1.5s ease-in-out infinite;
-  }
-}
-
 /* Enhanced Animations */
-@keyframes smart-pulse {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.9;
-    transform: scale(1.02);
-  }
-}
-
-@keyframes smart-shimmer {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 100%;
-  }
-}
-
 @keyframes fadeIn {
   from { 
     opacity: 0; 
@@ -378,37 +166,18 @@
 
 .smart-scrollbar::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, 
-    hsl(var(--smart-blue)) 0%, 
-    hsl(var(--smart-emerald)) 100%);
+    hsl(var(--primary)) 0%, 
+    hsl(var(--accent)) 100%);
   border-radius: 8px;
   border: 2px solid hsl(var(--background));
 }
 
 .smart-scrollbar::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, 
-    hsl(var(--smart-emerald)) 0%, 
-    hsl(var(--smart-purple)) 100%);
+    hsl(var(--accent)) 0%, 
+    hsl(var(--primary)) 100%);
 }
 
 .smart-scrollbar::-webkit-scrollbar-corner {
   background: hsl(var(--background));
-}
-
-/* Responsive Font Scaling */
-@media (max-width: 640px) {
-  html {
-    font-size: 14px;
-  }
-}
-
-@media (min-width: 1024px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-@media (min-width: 1280px) {
-  html {
-    font-size: 17px;
-  }
 }
