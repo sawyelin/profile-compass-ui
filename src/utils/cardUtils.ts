@@ -16,9 +16,9 @@ export const generateCardPDF = async (elementId: string, fileName: string) => {
     const canvas = await html2canvas(element, {
       scale: 2,
       useCORS: true,
-      backgroundColor: null,
-      width: 400,
-      height: 250
+      backgroundColor: '#ffffff',
+      width: element.offsetWidth,
+      height: element.offsetHeight
     });
 
     // Restore buttons
@@ -26,12 +26,22 @@ export const generateCardPDF = async (elementId: string, fileName: string) => {
 
     const imgData = canvas.toDataURL('image/png');
     const pdf = new jsPDF({
-      orientation: 'landscape',
+      orientation: 'portrait',
       unit: 'mm',
-      format: [85.6, 54] // Standard credit card size
+      format: 'a4' // A4 format for easy cutting
     });
 
-    pdf.addImage(imgData, 'PNG', 0, 0, 85.6, 54);
+    // Calculate dimensions to fit A4 page
+    const pageWidth = 210; // A4 width in mm
+    const pageHeight = 297; // A4 height in mm
+    const imgWidth = pageWidth - 20; // 10mm margin on each side
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    // Center the image on the page
+    const x = 10; // 10mm margin
+    const y = (pageHeight - imgHeight) / 2;
+
+    pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
     pdf.save(`${fileName}.pdf`);
 
     return true;
@@ -59,26 +69,41 @@ export const printCard = (elementId: string) => {
       <!DOCTYPE html>
       <html>
         <head>
-          <title>ID Card Print</title>
+          <title>ID Card Print - A4</title>
           <style>
+            @page {
+              size: A4;
+              margin: 10mm;
+            }
             body {
               margin: 0;
-              padding: 20px;
+              padding: 0;
               font-family: system-ui, -apple-system, sans-serif;
               background: white;
+              color: black;
             }
             .print-container {
+              width: 100%;
+              height: 100%;
               display: flex;
               justify-content: center;
-              align-items: center;
-              min-height: 80vh;
+              align-items: flex-start;
+              padding-top: 20mm;
             }
             button {
               display: none !important;
             }
             @media print {
-              body { margin: 0; padding: 0; }
-              .print-container { min-height: auto; }
+              body { 
+                margin: 0; 
+                padding: 0;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+              }
+              .print-container { 
+                padding-top: 0;
+                align-items: center;
+              }
             }
           </style>
         </head>
@@ -119,9 +144,9 @@ export const downloadCardImage = async (elementId: string, fileName: string) => 
     const canvas = await html2canvas(element, {
       scale: 3,
       useCORS: true,
-      backgroundColor: null,
-      width: 400,
-      height: 250
+      backgroundColor: '#ffffff',
+      width: element.offsetWidth,
+      height: element.offsetHeight
     });
 
     // Restore buttons
