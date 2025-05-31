@@ -1,10 +1,12 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Download, Printer, Shield, Verified, CheckCircle, Star, FileText, Image } from 'lucide-react';
 import { generateCardPDF, printCard, downloadCardImage } from '@/utils/cardUtils';
 import { useToast } from '@/hooks/use-toast';
 import { DualSidedIDCard } from './DualSidedIDCard';
+import { useState } from 'react';
 
 interface Person {
   name: string;
@@ -20,9 +22,10 @@ interface IDCardPreviewProps {
 
 export function IDCardPreview({ person }: IDCardPreviewProps) {
   const { toast } = useToast();
+  const [cardsPerSheet, setCardsPerSheet] = useState('1');
 
   const handleDownloadPDF = async () => {
-    const success = await generateCardPDF('dual-sided-card', `${person.name}-ID-Card-A4`);
+    const success = await generateCardPDF('print-card', `${person.name}-ID-Card-A4`);
     if (success) {
       toast({
         title: "Success",
@@ -38,7 +41,7 @@ export function IDCardPreview({ person }: IDCardPreviewProps) {
   };
 
   const handlePrint = () => {
-    const success = printCard('dual-sided-card');
+    const success = printCard('print-card');
     if (success) {
       toast({
         title: "Print Job Sent",
@@ -54,11 +57,11 @@ export function IDCardPreview({ person }: IDCardPreviewProps) {
   };
 
   const handleDownloadImage = async () => {
-    const success = await downloadCardImage('dual-sided-card', `${person.name}-ID-Card-A4`);
+    const success = await downloadCardImage('preview-card', `${person.name}-ID-Card`);
     if (success) {
       toast({
         title: "Success",
-        description: "A4 ID card image downloaded successfully!",
+        description: "ID card image downloaded successfully!",
       });
     } else {
       toast({
@@ -73,10 +76,21 @@ export function IDCardPreview({ person }: IDCardPreviewProps) {
     <div className="space-y-8">
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-xl font-bold">Professional ID Card - A4 Format</h3>
-          <p className="text-sm text-muted-foreground">Front & back sides ready for cutting</p>
+          <h3 className="text-xl font-bold">Professional ID Card Preview</h3>
+          <p className="text-sm text-muted-foreground">Front & back sides preview</p>
         </div>
         <div className="flex gap-2">
+          <Select value={cardsPerSheet} onValueChange={setCardsPerSheet}>
+            <SelectTrigger className="w-32">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">1 Card/A4</SelectItem>
+              <SelectItem value="2">2 Cards/A4</SelectItem>
+              <SelectItem value="4">4 Cards/A4</SelectItem>
+              <SelectItem value="8">8 Cards/A4</SelectItem>
+            </SelectContent>
+          </Select>
           <Button variant="outline" size="sm" onClick={handleDownloadImage}>
             <Image className="mr-2 h-4 w-4" />
             Image
@@ -92,8 +106,17 @@ export function IDCardPreview({ person }: IDCardPreviewProps) {
         </div>
       </div>
 
-      {/* Dual-Sided ID Card */}
-      <DualSidedIDCard person={person} cardId="dual-sided-card" />
+      {/* Card Preview - Only show cards, no A4 layout */}
+      <Card className="bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-950 border-2">
+        <CardContent className="p-8">
+          <DualSidedIDCard person={person} cardId="preview-card" viewMode="preview" />
+        </CardContent>
+      </Card>
+
+      {/* Hidden A4 Print Layout */}
+      <div className="hidden">
+        <DualSidedIDCard person={person} cardId="print-card" viewMode="print" />
+      </div>
 
       {/* Enhanced Information Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -126,10 +149,10 @@ export function IDCardPreview({ person }: IDCardPreviewProps) {
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Print Format</span>
+                <span className="text-muted-foreground">Cards per A4</span>
                 <div className="flex items-center gap-1 text-blue-600">
                   <CheckCircle className="h-4 w-4" />
-                  <span className="font-medium">A4 Ready</span>
+                  <span className="font-medium">{cardsPerSheet} Card{cardsPerSheet !== '1' ? 's' : ''}</span>
                 </div>
               </div>
             </div>
