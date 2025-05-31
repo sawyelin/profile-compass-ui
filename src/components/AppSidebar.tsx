@@ -1,5 +1,5 @@
 
-import { Home, Users, FileText, Search, Settings, User, Calendar } from "lucide-react";
+import { Home, Users, FileText, Search, Settings, User, Calendar, Trees } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import {
   Sidebar,
@@ -24,6 +24,11 @@ const menuItems = [
     title: "People",
     url: "/people",
     icon: Users,
+  },
+  {
+    title: "Family",
+    url: "/family",
+    icon: Trees,
   },
   {
     title: "Documents",
@@ -51,34 +56,46 @@ export function AppSidebar() {
   const location = useLocation();
 
   return (
-    <Sidebar className="border-r border-border/40">
-      <SidebarHeader className="p-6">
+    <Sidebar className="border-r border-border/40 bg-card/50 backdrop-blur-xl">
+      <SidebarHeader className="p-6 border-b border-border/40">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
-            <User className="w-4 h-4 text-white" />
+          <div className="w-10 h-10 smart-gradient rounded-xl flex items-center justify-center shadow-lg">
+            <User className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="font-bold text-lg">Identity</h1>
-            <p className="text-xs text-muted-foreground">Management System</p>
+            <h1 className="font-bold text-xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              Identity
+            </h1>
+            <p className="text-xs text-muted-foreground font-medium">
+              Management System
+            </p>
           </div>
         </div>
       </SidebarHeader>
       
-      <SidebarContent>
+      <SidebarContent className="p-4">
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground/80 uppercase tracking-wider mb-2">
+            Navigation
+          </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="space-y-1">
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
                     asChild 
                     isActive={location.pathname === item.url}
-                    className="transition-all duration-200 hover:bg-primary/10"
+                    className={`
+                      transition-all duration-200 group rounded-xl h-11
+                      hover:bg-primary/10 hover:text-primary
+                      data-[active=true]:bg-primary/15 data-[active=true]:text-primary
+                      data-[active=true]:shadow-sm data-[active=true]:border-l-4 data-[active=true]:border-primary
+                      data-[active=true]:font-semibold
+                    `}
                   >
-                    <Link to={item.url} className="flex items-center gap-3">
-                      <item.icon className="w-4 h-4" />
-                      <span>{item.title}</span>
+                    <Link to={item.url} className="flex items-center gap-3 w-full">
+                      <item.icon className="w-5 h-5 transition-transform group-hover:scale-110" />
+                      <span className="font-medium">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -88,8 +105,8 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       
-      <SidebarFooter className="p-4">
-        <div className="text-xs text-muted-foreground text-center">
+      <SidebarFooter className="p-4 border-t border-border/40">
+        <div className="text-xs text-muted-foreground text-center font-medium">
           © 2024 Identity System
         </div>
       </SidebarFooter>
