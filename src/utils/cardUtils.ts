@@ -11,8 +11,6 @@ export const generateCardPDF = async (elementId: string, fileName: string, inclu
       throw new Error('Element not found');
     }
 
-    console.log('Element found, generating canvas...');
-
     // Hide buttons and interactive elements during capture
     const buttons = element.querySelectorAll('button');
     buttons.forEach(btn => btn.style.display = 'none');
@@ -24,57 +22,74 @@ export const generateCardPDF = async (elementId: string, fileName: string, inclu
       format: 'a4'
     });
 
-    // Capture front side
-    const frontCanvas = await html2canvas(element, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: null,
-      width: 400,
-      height: 250
-    });
-
-    const frontImgData = frontCanvas.toDataURL('image/png');
-    
-    // Add front side to PDF (centered)
+    // Card dimensions
     const cardWidth = 85.6; // Credit card width in mm
     const cardHeight = 54; // Credit card height in mm
     const pageWidth = 297; // A4 width in mm
     const pageHeight = 210; // A4 height in mm
     
     const frontX = (pageWidth - cardWidth) / 2;
-    const frontY = (pageHeight - cardHeight) / 2 - 30; // Position front card higher
-    
-    pdf.addImage(frontImgData, 'PNG', frontX, frontY, cardWidth, cardHeight);
-    pdf.text('FRONT SIDE', frontX, frontY - 5);
+    const frontY = (pageHeight - cardHeight) / 2 - 30;
 
     if (includeBothSides) {
-      // Trigger flip to back side
+      // Ensure we start with front side
       const flipButton = element.querySelector('button[data-flip="true"]') as HTMLButtonElement;
+      const cardContainer = element.querySelector('.w-\\[400px\\]');
+      
+      // Check current state and force to front
+      if (flipButton && flipButton.textContent?.includes('Show Front')) {
+        flipButton.click();
+        await new Promise(resolve => setTimeout(resolve, 600));
+      }
+
+      // Capture front side
+      const frontCanvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        width: 400,
+        height: 250
+      });
+
+      const frontImgData = frontCanvas.toDataURL('image/png');
+      pdf.addImage(frontImgData, 'PNG', frontX, frontY, cardWidth, cardHeight);
+      pdf.text('FRONT SIDE', frontX, frontY - 5);
+
+      // Flip to back side
       if (flipButton) {
         flipButton.click();
-        
-        // Wait for flip animation and re-render
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 600));
         
         // Capture back side
         const backCanvas = await html2canvas(element, {
           scale: 2,
           useCORS: true,
-          backgroundColor: null,
+          backgroundColor: '#ffffff',
           width: 400,
           height: 250
         });
 
         const backImgData = backCanvas.toDataURL('image/png');
-        
-        // Add back side to PDF (below front)
         const backY = (pageHeight - cardHeight) / 2 + 30;
         pdf.addImage(backImgData, 'PNG', frontX, backY, cardWidth, cardHeight);
         pdf.text('BACK SIDE', frontX, backY - 5);
 
         // Flip back to front
         flipButton.click();
+        await new Promise(resolve => setTimeout(resolve, 300));
       }
+    } else {
+      // Single side
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        width: 400,
+        height: 250
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      pdf.addImage(imgData, 'PNG', frontX, frontY, cardWidth, cardHeight);
     }
 
     // Restore buttons
@@ -104,8 +119,41 @@ export const printCard = (elementId: string, includeBothSides = true) => {
       throw new Error('Could not open print window');
     }
 
-    const cardHtml = element.outerHTML;
-    console.log('Opening print window with card HTML');
+    // Get the current card HTML
+    const cardElement = element.querySelector('.w-\\[400px\\]');
+    if (!cardElement) {
+      throw new Error('Card element not found');
+    }
+
+    let printContent = '';
+
+    if (includeBothSides) {
+      // Create both sides for printing
+      printContent = `
+        <div class="print-container">
+          <div class="card-side">
+            <div class="side-label">FRONT SIDE</div>
+            <div class="w-[400px] h-[250px] bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 rounded-2xl p-6 text-white relative overflow-hidden shadow-2xl border border-slate-700/50">
+              <!-- Front side content will be injected -->
+            </div>
+          </div>
+          <div class="card-side">
+            <div class="side-label">BACK SIDE</div>
+            <div class="w-[400px] h-[250px] bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 rounded-2xl p-5 text-white relative overflow-hidden shadow-2xl border border-slate-700/50">
+              <!-- Back side content will be injected -->
+            </div>
+          </div>
+        </div>
+      `;
+    } else {
+      printContent = `
+        <div class="print-container">
+          <div class="card-side">
+            ${cardElement.outerHTML}
+          </div>
+        </div>
+      `;
+    }
     
     printWindow.document.write(`
       <!DOCTYPE html>
@@ -131,11 +179,13 @@ export const printCard = (elementId: string, includeBothSides = true) => {
               flex-direction: column;
               align-items: center;
               gap: 10px;
+              page-break-inside: avoid;
             }
             .side-label {
               font-weight: bold;
               font-size: 14px;
               color: #333;
+              margin-bottom: 10px;
             }
             button {
               display: none !important;
@@ -143,22 +193,13 @@ export const printCard = (elementId: string, includeBothSides = true) => {
             @media print {
               body { margin: 0; padding: 10mm; }
               .print-container { min-height: auto; gap: 15mm; }
+              .card-side { page-break-after: always; }
+              .card-side:last-child { page-break-after: auto; }
             }
           </style>
         </head>
         <body>
-          <div class="print-container">
-            <div class="card-side">
-              <div class="side-label">FRONT SIDE</div>
-              ${cardHtml}
-            </div>
-            ${includeBothSides ? `
-            <div class="card-side">
-              <div class="side-label">BACK SIDE</div>
-              ${cardHtml.replace('showBack={false}', 'showBack={true}')}
-            </div>
-            ` : ''}
-          </div>
+          ${printContent}
         </body>
       </html>
     `);
@@ -199,49 +240,63 @@ export const downloadCardImage = async (elementId: string, fileName: string, inc
       if (!ctx) throw new Error('Canvas context not available');
 
       // Set canvas size for both cards
-      combinedCanvas.width = 400 * 3; // Scale factor
-      combinedCanvas.height = 250 * 2 * 3 + 60; // Two cards + gap
+      const scale = 3;
+      const cardWidth = 400 * scale;
+      const cardHeight = 250 * scale;
+      const gap = 60;
+      
+      combinedCanvas.width = cardWidth;
+      combinedCanvas.height = cardHeight * 2 + gap * 3;
+
+      // Fill background
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, combinedCanvas.width, combinedCanvas.height);
+
+      const flipButton = element.querySelector('button[data-flip="true"]') as HTMLButtonElement;
+      
+      // Ensure we start with front side
+      if (flipButton && flipButton.textContent?.includes('Show Front')) {
+        flipButton.click();
+        await new Promise(resolve => setTimeout(resolve, 600));
+      }
 
       // Capture front side
       const frontCanvas = await html2canvas(element, {
-        scale: 3,
+        scale: scale,
         useCORS: true,
         backgroundColor: '#ffffff',
         width: 400,
         height: 250
       });
 
-      // Draw front side
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, combinedCanvas.width, combinedCanvas.height);
+      // Draw front side label and card
       ctx.font = 'bold 24px Arial';
       ctx.fillStyle = '#333333';
       ctx.textAlign = 'center';
       ctx.fillText('FRONT SIDE', combinedCanvas.width / 2, 40);
-      ctx.drawImage(frontCanvas, 0, 60);
+      ctx.drawImage(frontCanvas, 0, gap);
 
-      // Trigger flip to back side
-      const flipButton = element.querySelector('button[data-flip="true"]') as HTMLButtonElement;
+      // Flip to back side and capture
       if (flipButton) {
         flipButton.click();
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 600));
 
-        // Capture back side
         const backCanvas = await html2canvas(element, {
-          scale: 3,
+          scale: scale,
           useCORS: true,
           backgroundColor: '#ffffff',
           width: 400,
           height: 250
         });
 
-        // Draw back side
-        const backY = 60 + 250 * 3 + 60;
-        ctx.fillText('BACK SIDE', combinedCanvas.width / 2, backY - 20);
-        ctx.drawImage(backCanvas, 0, backY);
+        // Draw back side label and card
+        const backY = gap + cardHeight + gap;
+        ctx.fillText('BACK SIDE', combinedCanvas.width / 2, backY + 40);
+        ctx.drawImage(backCanvas, 0, backY + gap);
 
         // Flip back to front
         flipButton.click();
+        await new Promise(resolve => setTimeout(resolve, 300));
       }
 
       // Download combined image
@@ -254,7 +309,7 @@ export const downloadCardImage = async (elementId: string, fileName: string, inc
       const canvas = await html2canvas(element, {
         scale: 3,
         useCORS: true,
-        backgroundColor: null,
+        backgroundColor: '#ffffff',
         width: 400,
         height: 250
       });

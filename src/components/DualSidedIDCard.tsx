@@ -36,7 +36,7 @@ export function DualSidedIDCard({ person, showBack = false }: DualSidedIDCardPro
   if (showBack) {
     return (
       <div 
-        className="w-[400px] h-[250px] bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 rounded-2xl p-5 text-white relative overflow-hidden shadow-2xl border border-slate-700/50"
+        className="w-[400px] h-[250px] bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 rounded-2xl p-4 text-white relative overflow-hidden shadow-2xl border border-slate-700/50"
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
@@ -45,64 +45,64 @@ export function DualSidedIDCard({ person, showBack = false }: DualSidedIDCardPro
           <div className="absolute top-1/2 left-1/2 w-32 h-0.5 bg-white/10 transform -translate-x-1/2 -translate-y-1/2 rotate-45"></div>
         </div>
 
-        {/* Header */}
-        <div className="text-center mb-4">
-          <h4 className="text-lg font-bold tracking-wider text-blue-100">REPUBLIC OF THE UNION OF MYANMAR</h4>
-          <h3 className="text-xl font-black tracking-wide text-white">DIGITAL IDENTITY CARD</h3>
-          <div className="w-20 h-0.5 bg-gradient-to-r from-blue-400 to-emerald-400 mx-auto mt-2"></div>
+        {/* Header - Centered and Compact */}
+        <div className="text-center mb-3">
+          <h4 className="text-sm font-bold tracking-wider text-blue-100">REPUBLIC OF THE UNION OF MYANMAR</h4>
+          <h3 className="text-lg font-black tracking-wide text-white">DIGITAL IDENTITY CARD</h3>
+          <div className="w-20 h-0.5 bg-gradient-to-r from-blue-400 to-emerald-400 mx-auto mt-1"></div>
         </div>
 
-        {/* Main Content */}
-        <div className="flex items-start justify-between gap-4 mt-3">
-          {/* Left Side - QR Code and Verification */}
-          <div className="flex flex-col items-center flex-shrink-0">
-            <div className="p-2 bg-white rounded-xl shadow-lg mb-2">
+        {/* Main Content - Better Layout */}
+        <div className="flex items-center justify-between gap-3 h-[140px]">
+          {/* Left Side - QR Code */}
+          <div className="flex flex-col items-center justify-center flex-shrink-0">
+            <div className="p-1.5 bg-white rounded-lg shadow-lg mb-1">
               <img
                 src={generateOfficialEIDQR()}
                 alt="Official eID QR Code"
-                className="w-16 h-16"
+                className="w-14 h-14"
               />
             </div>
             <div className="text-center">
-              <p className="text-xs font-bold text-blue-200">SCAN TO VERIFY</p>
-              <p className="text-[10px] text-blue-300">Digital Authentication</p>
+              <p className="text-[10px] font-bold text-blue-200">SCAN TO VERIFY</p>
+              <p className="text-[8px] text-blue-300">Digital Auth</p>
             </div>
           </div>
 
-          {/* Right Side - Information */}
-          <div className="flex-1 space-y-3">
+          {/* Center - Information Grid */}
+          <div className="flex-1 space-y-2 px-2">
             {/* Verification Instructions */}
-            <div className="bg-white/10 rounded-lg p-3 backdrop-blur-sm">
-              <h5 className="text-sm font-bold text-blue-100 mb-2 flex items-center gap-1">
-                <QrCode className="h-3 w-3" />
+            <div className="bg-white/10 rounded-md p-2 backdrop-blur-sm">
+              <h5 className="text-[10px] font-bold text-blue-100 mb-1 flex items-center gap-1">
+                <QrCode className="h-2 w-2" />
                 VERIFICATION GUIDE
               </h5>
-              <div className="text-[10px] text-blue-200 space-y-1 leading-relaxed">
-                <p>• Scan QR code using official eID app</p>
-                <p>• Visit eid.gov.mm for online verification</p>
-                <p>• Check digital signature authenticity</p>
-                <p>• Verify against national database</p>
+              <div className="text-[8px] text-blue-200 space-y-0.5 leading-tight">
+                <p>• Scan QR using official eID app</p>
+                <p>• Visit eid.gov.mm for verification</p>
+                <p>• Check digital signature</p>
+                <p>• Verify national database</p>
               </div>
             </div>
 
             {/* Card Information */}
-            <div className="bg-white/10 rounded-lg p-3 backdrop-blur-sm">
-              <h5 className="text-sm font-bold text-blue-100 mb-2">CARD INFORMATION</h5>
-              <div className="text-xs space-y-1.5">
-                <div className="flex justify-between items-center">
-                  <span className="text-blue-200">Issue Date:</span>
-                  <span className="font-medium">15 January 2024</span>
+            <div className="bg-white/10 rounded-md p-2 backdrop-blur-sm">
+              <h5 className="text-[10px] font-bold text-blue-100 mb-1">CARD INFORMATION</h5>
+              <div className="text-[8px] space-y-0.5">
+                <div className="flex justify-between">
+                  <span className="text-blue-200">Issue:</span>
+                  <span className="font-medium">15 Jan 2024</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-blue-200">Expiry Date:</span>
-                  <span className="font-medium">31 December 2029</span>
+                <div className="flex justify-between">
+                  <span className="text-blue-200">Expiry:</span>
+                  <span className="font-medium">31 Dec 2029</span>
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between">
                   <span className="text-blue-200">Authority:</span>
-                  <span className="font-medium text-right">Myanmar Digital<br/>ID Department</span>
+                  <span className="font-medium">Digital ID Dept</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-blue-200">Serial No:</span>
+                <div className="flex justify-between">
+                  <span className="text-blue-200">Serial:</span>
                   <span className="font-medium font-mono">MID{person.personalId}</span>
                 </div>
               </div>
@@ -110,25 +110,25 @@ export function DualSidedIDCard({ person, showBack = false }: DualSidedIDCardPro
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="absolute bottom-2 left-5 right-5">
-          <div className="flex justify-between items-center text-[10px] text-blue-200/90 border-t border-white/20 pt-2">
+        {/* Footer - Fixed Position */}
+        <div className="absolute bottom-2 left-4 right-4">
+          <div className="flex justify-between items-center text-[8px] text-blue-200/90 border-t border-white/20 pt-1">
             <span className="font-medium">eid.gov.mm/verify</span>
             <div className="flex items-center gap-1">
-              <Shield className="h-3 w-3 text-emerald-400" />
-              <span className="font-bold">SECURE & VERIFIED</span>
+              <Shield className="h-2 w-2 text-emerald-400" />
+              <span className="font-bold">SECURE</span>
             </div>
           </div>
         </div>
 
-        {/* Security Badges */}
-        <div className="absolute top-2 left-2 flex items-center gap-1 bg-emerald-600/90 px-2 py-1 rounded-full text-[10px] font-bold">
-          <Shield className="h-2.5 w-2.5" />
+        {/* Security Badges - Fixed Position */}
+        <div className="absolute top-2 left-2 flex items-center gap-1 bg-emerald-600/90 px-1.5 py-0.5 rounded-full text-[8px] font-bold">
+          <Shield className="h-2 w-2" />
           <span>OFFICIAL</span>
         </div>
 
-        <div className="absolute top-2 right-2 flex items-center gap-1 bg-blue-600/90 px-2 py-1 rounded-full text-[10px] font-bold">
-          <CheckCircle className="h-2.5 w-2.5" />
+        <div className="absolute top-2 right-2 flex items-center gap-1 bg-blue-600/90 px-1.5 py-0.5 rounded-full text-[8px] font-bold">
+          <CheckCircle className="h-2 w-2" />
           <span>AUTHENTIC</span>
         </div>
 
