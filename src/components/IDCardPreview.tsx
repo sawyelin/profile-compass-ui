@@ -23,7 +23,11 @@ export function IDCardPreview({ person }: IDCardPreviewProps) {
   const { toast } = useToast();
   const [showBack, setShowBack] = useState(false);
 
+  console.log('IDCardPreview rendering with person:', person);
+  console.log('Current showBack state:', showBack);
+
   const handleDownloadPDF = async () => {
+    console.log('Download PDF clicked');
     const success = await generateCardPDF('id-card-preview', `${person.name}-ID-Card`);
     if (success) {
       toast({
@@ -40,6 +44,7 @@ export function IDCardPreview({ person }: IDCardPreviewProps) {
   };
 
   const handlePrint = () => {
+    console.log('Print clicked');
     const success = printCard('id-card-preview');
     if (success) {
       toast({
@@ -56,6 +61,7 @@ export function IDCardPreview({ person }: IDCardPreviewProps) {
   };
 
   const handleDownloadImage = async () => {
+    console.log('Download Image clicked');
     const success = await downloadCardImage('id-card-preview', `${person.name}-ID-Card`);
     if (success) {
       toast({
@@ -71,6 +77,12 @@ export function IDCardPreview({ person }: IDCardPreviewProps) {
     }
   };
 
+  const handleFlipCard = () => {
+    console.log('Flip card clicked, current state:', showBack);
+    setShowBack(!showBack);
+    console.log('New state will be:', !showBack);
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
@@ -79,9 +91,9 @@ export function IDCardPreview({ person }: IDCardPreviewProps) {
           <p className="text-sm text-muted-foreground">Digital identity verification system</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => setShowBack(!showBack)}>
+          <Button variant="outline" size="sm" onClick={handleFlipCard}>
             <RotateCcw className="mr-2 h-4 w-4" />
-            {showBack ? 'Front' : 'Back'}
+            {showBack ? 'Show Front' : 'Show Back'}
           </Button>
           <Button variant="outline" size="sm" onClick={handleDownloadImage}>
             <Image className="mr-2 h-4 w-4" />
@@ -171,6 +183,10 @@ export function IDCardPreview({ person }: IDCardPreviewProps) {
                   <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
                   <span className="font-medium text-emerald-600">Active</span>
                 </div>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Current Side</span>
+                <span className="font-medium">{showBack ? 'Back (Myanmar eID)' : 'Front'}</span>
               </div>
             </div>
           </CardContent>

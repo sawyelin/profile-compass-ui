@@ -4,10 +4,14 @@ import jsPDF from 'jspdf';
 
 export const generateCardPDF = async (elementId: string, fileName: string) => {
   try {
+    console.log('Starting PDF generation for element:', elementId);
     const element = document.getElementById(elementId);
     if (!element) {
+      console.error('Element not found:', elementId);
       throw new Error('Element not found');
     }
+
+    console.log('Element found, generating canvas...');
 
     // Hide buttons and interactive elements during capture
     const buttons = element.querySelectorAll('button');
@@ -20,6 +24,8 @@ export const generateCardPDF = async (elementId: string, fileName: string) => {
       width: 400,
       height: 250
     });
+
+    console.log('Canvas generated, creating PDF...');
 
     // Restore buttons
     buttons.forEach(btn => btn.style.display = '');
@@ -34,6 +40,7 @@ export const generateCardPDF = async (elementId: string, fileName: string) => {
     pdf.addImage(imgData, 'PNG', 0, 0, 85.6, 54);
     pdf.save(`${fileName}.pdf`);
 
+    console.log('PDF saved successfully');
     return true;
   } catch (error) {
     console.error('PDF generation failed:', error);
@@ -43,17 +50,21 @@ export const generateCardPDF = async (elementId: string, fileName: string) => {
 
 export const printCard = (elementId: string) => {
   try {
+    console.log('Starting print for element:', elementId);
     const element = document.getElementById(elementId);
     if (!element) {
+      console.error('Element not found:', elementId);
       throw new Error('Element not found');
     }
 
     const printWindow = window.open('', '_blank');
     if (!printWindow) {
+      console.error('Could not open print window');
       throw new Error('Could not open print window');
     }
 
     const cardHtml = element.outerHTML;
+    console.log('Opening print window with card HTML');
     
     printWindow.document.write(`
       <!DOCTYPE html>
@@ -98,6 +109,7 @@ export const printCard = (elementId: string) => {
       printWindow.close();
     }, 500);
 
+    console.log('Print job sent successfully');
     return true;
   } catch (error) {
     console.error('Print failed:', error);
@@ -107,8 +119,10 @@ export const printCard = (elementId: string) => {
 
 export const downloadCardImage = async (elementId: string, fileName: string) => {
   try {
+    console.log('Starting image download for element:', elementId);
     const element = document.getElementById(elementId);
     if (!element) {
+      console.error('Element not found:', elementId);
       throw new Error('Element not found');
     }
 
@@ -116,6 +130,7 @@ export const downloadCardImage = async (elementId: string, fileName: string) => 
     const buttons = element.querySelectorAll('button');
     buttons.forEach(btn => btn.style.display = 'none');
 
+    console.log('Generating canvas for image download...');
     const canvas = await html2canvas(element, {
       scale: 3,
       useCORS: true,
@@ -133,6 +148,7 @@ export const downloadCardImage = async (elementId: string, fileName: string) => 
     link.href = canvas.toDataURL('image/png');
     link.click();
 
+    console.log('Image downloaded successfully');
     return true;
   } catch (error) {
     console.error('Image download failed:', error);
