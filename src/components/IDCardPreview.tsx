@@ -28,11 +28,11 @@ export function IDCardPreview({ person }: IDCardPreviewProps) {
 
   const handleDownloadPDF = async () => {
     console.log('Download PDF clicked');
-    const success = await generateCardPDF('id-card-preview', `${person.name}-ID-Card`);
+    const success = await generateCardPDF('id-card-preview', `${person.name}-ID-Card`, true);
     if (success) {
       toast({
         title: "Success",
-        description: "ID card PDF downloaded successfully!",
+        description: "ID card PDF with both sides downloaded successfully!",
       });
     } else {
       toast({
@@ -45,11 +45,11 @@ export function IDCardPreview({ person }: IDCardPreviewProps) {
 
   const handlePrint = () => {
     console.log('Print clicked');
-    const success = printCard('id-card-preview');
+    const success = printCard('id-card-preview', true);
     if (success) {
       toast({
         title: "Print Job Sent",
-        description: "ID card sent to printer successfully!",
+        description: "ID card with both sides sent to printer successfully!",
       });
     } else {
       toast({
@@ -62,11 +62,11 @@ export function IDCardPreview({ person }: IDCardPreviewProps) {
 
   const handleDownloadImage = async () => {
     console.log('Download Image clicked');
-    const success = await downloadCardImage('id-card-preview', `${person.name}-ID-Card`);
+    const success = await downloadCardImage('id-card-preview', `${person.name}-ID-Card`, true);
     if (success) {
       toast({
         title: "Success",
-        description: "ID card image downloaded successfully!",
+        description: "ID card image with both sides downloaded successfully!",
       });
     } else {
       toast({
@@ -91,7 +91,7 @@ export function IDCardPreview({ person }: IDCardPreviewProps) {
           <p className="text-sm text-muted-foreground">Digital identity verification system</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={handleFlipCard}>
+          <Button variant="outline" size="sm" onClick={handleFlipCard} data-flip="true">
             <RotateCcw className="mr-2 h-4 w-4" />
             {showBack ? 'Show Front' : 'Show Back'}
           </Button>
