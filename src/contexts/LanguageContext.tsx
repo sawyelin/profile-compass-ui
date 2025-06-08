@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 type Language = 'en' | 'my';
@@ -92,6 +93,24 @@ const translations = {
     'people.documents': 'documents',
     'people.viewProfile': 'View Profile',
     'people.noResults': 'No people found matching your search.',
+    
+    // Form Fields
+    'form.personalInfo': 'Personal Information',
+    'form.nrcInfo': 'NRC Information',
+    'form.addressInfo': 'Address Information',
+    'form.fullName': 'Full Name',
+    'form.englishName': 'English Name',
+    'form.myanmarName': 'Myanmar Name',
+    'form.dateOfBirth': 'Date of Birth',
+    'form.gender': 'Gender',
+    'form.male': 'Male',
+    'form.female': 'Female',
+    'form.other': 'Other',
+    'form.phone': 'Phone Number',
+    'form.email': 'Email',
+    'form.address': 'Address',
+    'form.englishAddress': 'English Address',
+    'form.myanmarAddress': 'Myanmar Address',
     
     // Common
     'common.generated': 'Generated',
@@ -188,6 +207,24 @@ const translations = {
     'people.documents': 'စာရွက်စာတမ်းများ',
     'people.viewProfile': 'ပရိုဖိုင်ကြည့်ရန်',
     'people.noResults': 'သင့်ရှာဖွေမှုနှင့် ကိုက်ညီသောလူမရှိပါ။',
+    
+    // Form Fields
+    'form.personalInfo': 'ကိုယ်ရေးအချက်အလက်များ',
+    'form.nrcInfo': 'မှတ်ပုံတင်ကတ် အချက်အလက်များ',
+    'form.addressInfo': 'လိပ်စာအချက်အလက်များ',
+    'form.fullName': 'အမည်အပြည့်အစုံ',
+    'form.englishName': 'အင်္ဂလိပ်အမည်',
+    'form.myanmarName': 'မြန်မာအမည်',
+    'form.dateOfBirth': 'မွေးသက္ကရာဇ်',
+    'form.gender': 'ကျား/မ',
+    'form.male': 'ကျား',
+    'form.female': 'မ',
+    'form.other': 'အခြား',
+    'form.phone': 'ဖုန်းနံပါတ်',
+    'form.email': 'အီးမေးလ်',
+    'form.address': 'လိပ်စာ',
+    'form.englishAddress': 'အင်္ဂလိပ်လိပ်စာ',
+    'form.myanmarAddress': 'မြန်မာလိပ်စာ',
     
     // Common
     'common.generated': 'ထုတ်လုပ်ပြီး',
