@@ -76,9 +76,13 @@ export function NrcForm({ onNrcChange, initialNrc = '', showTitle = true }: NrcF
   useEffect(() => {
     if (selectedStateId && selectedTownshipCode && selectedNrcType && nrcNumber) {
       const selectedState = states.find(s => s.id === selectedStateId);
-      if (selectedState) {
+      const selectedTownship = townships.find(t => t.code === selectedTownshipCode);
+      
+      if (selectedState && selectedTownship) {
+        // Use English format first, then convert if needed
         const stateNumber = selectedState.number.en;
-        const nrcString = `${stateNumber}/${selectedTownshipCode}(${selectedNrcType})${nrcNumber}`;
+        const townshipShort = selectedTownship.short.en;
+        const nrcString = `${stateNumber}/${townshipShort}(${selectedNrcType})${nrcNumber}`;
         
         // Convert to appropriate language
         const finalNrc = language === 'my' ? convertToMmNrc(nrcString) : nrcString;
@@ -96,11 +100,11 @@ export function NrcForm({ onNrcChange, initialNrc = '', showTitle = true }: NrcF
       setFullNrc('');
       setIsValid(false);
     }
-  }, [selectedStateId, selectedTownshipCode, selectedNrcType, nrcNumber, language, states, onNrcChange]);
+  }, [selectedStateId, selectedTownshipCode, selectedNrcType, nrcNumber, language, states, townships, onNrcChange]);
 
   // Parse initial NRC if provided
   useEffect(() => {
-    if (initialNrc) {
+    if (initialNrc && states.length > 0) {
       try {
         // Convert to English for parsing if it's in Myanmar
         const englishNrc = language === 'my' ? convertToEnNrc(initialNrc) : initialNrc;
@@ -135,7 +139,7 @@ export function NrcForm({ onNrcChange, initialNrc = '', showTitle = true }: NrcF
       {showTitle && (
         <CardHeader>
           <CardTitle>
-            {language === 'my' ? 'မှတ်ပုံတင်ကတ် အချက်အလက်' : 'National Registration Card Information'}
+            {t('form.nrcInfo')}
           </CardTitle>
           <CardDescription>
             {language === 'my' 
@@ -213,7 +217,7 @@ export function NrcForm({ onNrcChange, initialNrc = '', showTitle = true }: NrcF
                 <SelectContent>
                   {nrcTypes.map((type) => (
                     <SelectItem key={type.id} value={type.id}>
-                      ({type.id}) {type.name[language]}
+                      ({language === 'my' ? type.name[language] : type.id}) {type.name[language]}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -228,7 +232,7 @@ export function NrcForm({ onNrcChange, initialNrc = '', showTitle = true }: NrcF
               <Input
                 value={nrcNumber}
                 onChange={(e) => setNrcNumber(e.target.value)}
-                placeholder={language === 'my' ? '123456' : '123456'}
+                placeholder={language === 'my' ? '၁၂၃၄၅၆' : '123456'}
                 maxLength={6}
               />
             </div>
@@ -249,7 +253,7 @@ export function NrcForm({ onNrcChange, initialNrc = '', showTitle = true }: NrcF
               onChange={(e) => handleManualNrcInput(e.target.value)}
               placeholder={
                 language === 'my' 
-                  ? '၁၂/တမန(နိုင်)123456' 
+                  ? '၁၂/တမန(နိုင်)၁၂၃၄၅၆' 
                   : '12/TAMANA(N)123456'
               }
               className={`${isValid ? 'border-green-500' : fullNrc ? 'border-red-500' : ''}`}
