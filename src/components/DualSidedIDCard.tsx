@@ -1,6 +1,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Shield, Verified, CheckCircle, Star, QrCode } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Person {
   name: string;
@@ -16,6 +17,8 @@ interface DualSidedIDCardProps {
 }
 
 export function DualSidedIDCard({ person, showBack = false }: DualSidedIDCardProps) {
+  const { t } = useLanguage();
+  
   const generateQRCode = (text: string) => {
     return `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(text)}`;
   };
@@ -47,8 +50,8 @@ export function DualSidedIDCard({ person, showBack = false }: DualSidedIDCardPro
 
         {/* Header - Centered and Compact */}
         <div className="text-center mb-3">
-          <h4 className="text-sm font-bold tracking-wider text-blue-100">REPUBLIC OF THE UNION OF MYANMAR</h4>
-          <h3 className="text-lg font-black tracking-wide text-white">DIGITAL IDENTITY CARD</h3>
+          <h4 className="text-sm font-bold tracking-wider text-blue-100">{t('card.backTitle')}</h4>
+          <h3 className="text-lg font-black tracking-wide text-white">{t('card.backSubtitle')}</h3>
           <div className="w-20 h-0.5 bg-gradient-to-r from-blue-400 to-emerald-400 mx-auto mt-1"></div>
         </div>
 
@@ -64,7 +67,7 @@ export function DualSidedIDCard({ person, showBack = false }: DualSidedIDCardPro
               />
             </div>
             <div className="text-center">
-              <p className="text-[10px] font-bold text-blue-200">SCAN TO VERIFY</p>
+              <p className="text-[10px] font-bold text-blue-200">{t('card.scanToVerify')}</p>
               <p className="text-[8px] text-blue-300">Digital Auth</p>
             </div>
           </div>
@@ -75,7 +78,7 @@ export function DualSidedIDCard({ person, showBack = false }: DualSidedIDCardPro
             <div className="bg-white/10 rounded-md p-2 backdrop-blur-sm">
               <h5 className="text-[10px] font-bold text-blue-100 mb-1 flex items-center gap-1">
                 <QrCode className="h-2 w-2" />
-                VERIFICATION GUIDE
+                {t('card.verificationGuide')}
               </h5>
               <div className="text-[8px] text-blue-200 space-y-0.5 leading-tight">
                 <p>• Scan QR using official eID app</p>
@@ -87,22 +90,22 @@ export function DualSidedIDCard({ person, showBack = false }: DualSidedIDCardPro
 
             {/* Card Information */}
             <div className="bg-white/10 rounded-md p-2 backdrop-blur-sm">
-              <h5 className="text-[10px] font-bold text-blue-100 mb-1">CARD INFORMATION</h5>
+              <h5 className="text-[10px] font-bold text-blue-100 mb-1">{t('card.cardInformation')}</h5>
               <div className="text-[8px] space-y-0.5">
                 <div className="flex justify-between">
-                  <span className="text-blue-200">Issue:</span>
+                  <span className="text-blue-200">{t('card.issue')}:</span>
                   <span className="font-medium">15 Jan 2024</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-blue-200">Expiry:</span>
+                  <span className="text-blue-200">{t('card.expiry')}:</span>
                   <span className="font-medium">31 Dec 2029</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-blue-200">Authority:</span>
+                  <span className="text-blue-200">{t('card.authority')}:</span>
                   <span className="font-medium">Digital ID Dept</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-blue-200">Serial:</span>
+                  <span className="text-blue-200">{t('card.serial')}:</span>
                   <span className="font-medium font-mono">MID{person.personalId}</span>
                 </div>
               </div>
@@ -116,7 +119,7 @@ export function DualSidedIDCard({ person, showBack = false }: DualSidedIDCardPro
             <span className="font-medium">eid.gov.mm/verify</span>
             <div className="flex items-center gap-1">
               <Shield className="h-2 w-2 text-emerald-400" />
-              <span className="font-bold">SECURE</span>
+              <span className="font-bold">{t('card.secure')}</span>
             </div>
           </div>
         </div>
@@ -124,12 +127,12 @@ export function DualSidedIDCard({ person, showBack = false }: DualSidedIDCardPro
         {/* Security Badges - Fixed Position */}
         <div className="absolute top-2 left-2 flex items-center gap-1 bg-emerald-600/90 px-1.5 py-0.5 rounded-full text-[8px] font-bold">
           <Shield className="h-2 w-2" />
-          <span>OFFICIAL</span>
+          <span>{t('card.official')}</span>
         </div>
 
         <div className="absolute top-2 right-2 flex items-center gap-1 bg-blue-600/90 px-1.5 py-0.5 rounded-full text-[8px] font-bold">
           <CheckCircle className="h-2 w-2" />
-          <span>AUTHENTIC</span>
+          <span>{t('card.authentic')}</span>
         </div>
 
         {/* Holographic effect */}
@@ -153,7 +156,7 @@ export function DualSidedIDCard({ person, showBack = false }: DualSidedIDCardPro
       {/* Security Badge */}
       <div className="absolute top-3 left-3 flex items-center gap-1 bg-emerald-600/80 px-2 py-1 rounded-full text-xs font-medium">
         <Shield className="h-3 w-3" />
-        <span>SECURE</span>
+        <span>{t('card.secure')}</span>
       </div>
 
       <div className="absolute top-3 right-3 flex items-center gap-1 bg-blue-600/80 px-2 py-1 rounded-full text-xs font-medium">
@@ -163,7 +166,7 @@ export function DualSidedIDCard({ person, showBack = false }: DualSidedIDCardPro
 
       {/* Header */}
       <div className="text-center mb-4 pt-6">
-        <h4 className="text-lg font-bold tracking-wider">MYANMAR DIGITAL ID</h4>
+        <h4 className="text-lg font-bold tracking-wider">{t('card.title')}</h4>
         <div className="w-16 h-0.5 bg-gradient-to-r from-blue-400 to-emerald-400 mx-auto mt-1"></div>
       </div>
 
@@ -196,11 +199,11 @@ export function DualSidedIDCard({ person, showBack = false }: DualSidedIDCardPro
           <div className="flex items-center gap-1 mt-2">
             <div className="px-2 py-0.5 bg-emerald-500/80 rounded text-xs font-semibold flex items-center gap-1">
               <CheckCircle className="h-3 w-3" />
-              CITIZEN
+              {t('card.citizen')}
             </div>
             <div className="px-2 py-0.5 bg-blue-500/80 rounded text-xs font-semibold flex items-center gap-1">
               <Star className="h-3 w-3" />
-              ACTIVE
+              {t('card.active')}
             </div>
           </div>
         </div>
@@ -213,14 +216,14 @@ export function DualSidedIDCard({ person, showBack = false }: DualSidedIDCardPro
               className="w-14 h-14"
             />
           </div>
-          <p className="text-xs text-blue-200 font-medium">SCAN</p>
+          <p className="text-xs text-blue-200 font-medium">{t('card.scan')}</p>
         </div>
       </div>
 
       {/* Footer */}
       <div className="absolute bottom-3 left-6 right-6">
         <div className="flex justify-between items-center text-xs text-blue-200/80">
-          <span>Serial: SC-{person.personalId}</span>
+          <span>{t('card.serial')}: SC-{person.personalId}</span>
           <span>Exp: 12/2029</span>
         </div>
       </div>

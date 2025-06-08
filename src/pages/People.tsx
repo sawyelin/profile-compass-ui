@@ -10,10 +10,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { UserPlus, Search, Filter, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { PersonForm } from '@/components/PersonForm';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 const People = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const { t } = useLanguage();
 
   // Mock data
   const people = [
@@ -57,26 +60,29 @@ const People = () => {
       <div className="space-y-8 animate-fade-in">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">People</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{t('people.title')}</h1>
             <p className="text-muted-foreground">
-              Manage all registered individuals in your system
+              {t('people.subtitle')}
             </p>
           </div>
           
-          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-gradient-to-r from-primary to-accent">
-                <UserPlus className="mr-2 h-4 w-4" />
-                Add New Person
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px]">
-              <DialogHeader>
-                <DialogTitle>Add New Person</DialogTitle>
-              </DialogHeader>
-              <PersonForm onSuccess={() => setIsAddDialogOpen(false)} />
-            </DialogContent>
-          </Dialog>
+          <div className="flex gap-2">
+            <LanguageSwitcher />
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-gradient-to-r from-primary to-accent">
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  {t('people.addNew')}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[600px]">
+                <DialogHeader>
+                  <DialogTitle>{t('people.addNew')}</DialogTitle>
+                </DialogHeader>
+                <PersonForm onSuccess={() => setIsAddDialogOpen(false)} />
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
 
         {/* Search and Filter */}
@@ -86,7 +92,7 @@ const People = () => {
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search by name, NRC, or ID..."
+                  placeholder={t('people.searchPlaceholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -94,7 +100,7 @@ const People = () => {
               </div>
               <Button variant="outline">
                 <Filter className="mr-2 h-4 w-4" />
-                Filter
+                {t('people.filter')}
               </Button>
             </div>
           </CardContent>
@@ -118,23 +124,23 @@ const People = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <p className="text-sm font-medium">NRC Number</p>
+                  <p className="text-sm font-medium">{t('people.nrcNumber')}</p>
                   <p className="text-sm text-muted-foreground">{person.nrc}</p>
                 </div>
                 
                 <div className="flex items-center justify-between">
                   <Badge variant={person.status === 'Active' ? 'default' : 'secondary'}>
-                    {person.status}
+                    {t(person.status === 'Active' ? 'common.active' : 'common.pending')}
                   </Badge>
                   <span className="text-sm text-muted-foreground">
-                    {person.documentsCount} documents
+                    {person.documentsCount} {t('people.documents')}
                   </span>
                 </div>
                 
                 <Button asChild variant="outline" className="w-full">
                   <Link to={`/person/${person.id}`}>
                     <Eye className="mr-2 h-4 w-4" />
-                    View Profile
+                    {t('people.viewProfile')}
                   </Link>
                 </Button>
               </CardContent>
@@ -145,7 +151,7 @@ const People = () => {
         {filteredPeople.length === 0 && (
           <Card>
             <CardContent className="text-center py-12">
-              <p className="text-muted-foreground">No people found matching your search.</p>
+              <p className="text-muted-foreground">{t('people.noResults')}</p>
             </CardContent>
           </Card>
         )}

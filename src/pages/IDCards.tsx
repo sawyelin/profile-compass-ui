@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,12 +11,15 @@ import { IDCardPreview } from '@/components/IDCardPreview';
 import { generateCardPDF, printCard } from '@/utils/cardUtils';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 const IDCards = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPerson, setSelectedPerson] = useState<any>(null);
   const [selectedCards, setSelectedCards] = useState<string[]>([]);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const people = [
     {
@@ -214,11 +216,12 @@ const IDCards = () => {
       <div className="space-y-8 animate-fade-in">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">ID Cards</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{t('idCards.title')}</h1>
             <p className="text-muted-foreground">
-              Generate and manage identity cards for registered people
+              {t('idCards.subtitle')}
             </p>
           </div>
+          <LanguageSwitcher />
         </div>
 
         <div className="grid gap-8 lg:grid-cols-2">
@@ -227,24 +230,24 @@ const IDCards = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
-                  Select Person
+                  {t('idCards.selectPerson')}
                   <div className="flex items-center gap-2">
                     <Checkbox
                       checked={selectedCards.length === filteredPeople.length && filteredPeople.length > 0}
                       onCheckedChange={handleSelectAll}
                     />
-                    <span className="text-sm text-muted-foreground">Select All</span>
+                    <span className="text-sm text-muted-foreground">{t('idCards.selectAll')}</span>
                   </div>
                 </CardTitle>
                 <CardDescription>
-                  Choose people to generate or view their ID cards
+                  {t('idCards.selectPersonMessage')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="relative">
                   <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search people..."
+                    placeholder={t('idCards.searchPlaceholder')}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-10"
@@ -278,7 +281,7 @@ const IDCards = () => {
                         </div>
                         <div className="text-right">
                           <Badge variant={person.cardStatus === 'Generated' ? 'default' : 'secondary'}>
-                            {person.cardStatus}
+                            {t(person.cardStatus === 'Generated' ? 'common.generated' : 'common.pending')}
                           </Badge>
                           {person.lastGenerated && (
                             <p className="text-xs text-muted-foreground mt-1">
@@ -298,7 +301,7 @@ const IDCards = () => {
                       className="flex-1 bg-gradient-to-r from-primary to-accent"
                     >
                       <Calendar className="mr-2 h-4 w-4" />
-                      {selectedPerson.cardStatus === 'Generated' ? 'Regenerate' : 'Generate'} Card
+                      {selectedPerson.cardStatus === 'Generated' ? t('idCards.regenerateCard') : t('idCards.generateCard')}
                     </Button>
                   </div>
                 )}
@@ -308,9 +311,9 @@ const IDCards = () => {
             {/* Enhanced Bulk Actions */}
             <Card>
               <CardHeader>
-                <CardTitle>Bulk Actions</CardTitle>
+                <CardTitle>{t('idCards.bulkActions')}</CardTitle>
                 <CardDescription>
-                  Perform actions on selected cards ({selectedCards.length} selected)
+                  {t('idCards.bulkActions')} ({selectedCards.length} {t('idCards.selectAll')})
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -321,7 +324,7 @@ const IDCards = () => {
                   disabled={selectedCards.length === 0}
                 >
                   <FileText className="mr-2 h-4 w-4" />
-                  Download Selected as PDF
+                  {t('idCards.downloadPDF')}
                 </Button>
                 <Button 
                   variant="outline" 
@@ -330,11 +333,11 @@ const IDCards = () => {
                   disabled={selectedCards.length === 0}
                 >
                   <Printer className="mr-2 h-4 w-4" />
-                  Print Selected Cards
+                  {t('idCards.printSelected')}
                 </Button>
                 <Button variant="outline" className="w-full">
                   <Plus className="mr-2 h-4 w-4" />
-                  Generate Cards for All
+                  {t('idCards.generateAll')}
                 </Button>
               </CardContent>
             </Card>
@@ -345,9 +348,9 @@ const IDCards = () => {
             {selectedPerson ? (
               <Card>
                 <CardHeader>
-                  <CardTitle>ID Card Preview</CardTitle>
+                  <CardTitle>{t('preview.title')}</CardTitle>
                   <CardDescription>
-                    Preview and customize the ID card for {selectedPerson.name}
+                    {t('preview.subtitle')} {selectedPerson.name}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -358,9 +361,9 @@ const IDCards = () => {
               <Card>
                 <CardContent className="text-center py-12">
                   <Calendar className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                  <p className="text-lg font-medium mb-2">No person selected</p>
+                  <p className="text-lg font-medium mb-2">{t('idCards.noPersonSelected')}</p>
                   <p className="text-muted-foreground">
-                    Select a person from the list to preview their ID card
+                    {t('idCards.selectPersonMessage')}
                   </p>
                 </CardContent>
               </Card>
@@ -369,17 +372,17 @@ const IDCards = () => {
             {/* Statistics */}
             <Card>
               <CardHeader>
-                <CardTitle>Card Statistics</CardTitle>
+                <CardTitle>{t('idCards.cardStatistics')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-4 text-center">
                   <div>
                     <p className="text-2xl font-bold text-primary">892</p>
-                    <p className="text-sm text-muted-foreground">Cards Generated</p>
+                    <p className="text-sm text-muted-foreground">{t('idCards.cardsGenerated')}</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold text-accent">123</p>
-                    <p className="text-sm text-muted-foreground">Pending Cards</p>
+                    <p className="text-sm text-muted-foreground">{t('idCards.pendingCards')}</p>
                   </div>
                 </div>
               </CardContent>
