@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 type Language = 'en' | 'my';
@@ -111,6 +110,12 @@ const translations = {
     'form.address': 'Address',
     'form.englishAddress': 'English Address',
     'form.myanmarAddress': 'Myanmar Address',
+    'form.enterFullName': 'Enter full name',
+    'form.selectGender': 'Select gender',
+    'form.phonePlaceholder': '+95 9 123 456 789',
+    'form.enterAddress': 'Enter full address',
+    'form.savePerson': 'Save Person',
+    'form.personSaved': 'Person saved successfully',
     
     // Common
     'common.generated': 'Generated',
@@ -225,6 +230,12 @@ const translations = {
     'form.address': 'လိပ်စာ',
     'form.englishAddress': 'အင်္ဂလိပ်လိပ်စာ',
     'form.myanmarAddress': 'မြန်မာလိပ်စာ',
+    'form.enterFullName': 'အမည်ရိုက်ထည့်ပါ',
+    'form.selectGender': 'ကျား/မ ရွေးချယ်ပါ',
+    'form.phonePlaceholder': '+၉၅ ၉ ၁၂၃ ၄၅၆ ၇၈၉',
+    'form.enterAddress': 'လိပ်စာအပြည့်အစုံရိုက်ထည့်ပါ',
+    'form.savePerson': 'ပုဂ္ဂိုလ်သိမ်းဆည်းရန်',
+    'form.personSaved': 'ပုဂ္ဂိုလ်သိမ်းဆည်းပြီးပါပြီ',
     
     // Common
     'common.generated': 'ထုတ်လုပ်ပြီး',
